@@ -1,0 +1,33 @@
+#%RAML 1.0
+title: simple-pagination
+mediaType:
+  - application/json
+version: 1.0.0
+protocols:
+  - HTTP
+
+/products:
+  get:
+    queryParameters:
+      offset:
+        type: number
+        example: 1
+        format: int
+      limit:
+        type: number
+        example: 10
+        format: int
+    responses:
+      200:
+        body:
+          type: object
+          properties:
+            nextOffset: integer
+            morePages: boolean
+            results:
+              type: array
+              items:
+                properties:
+                  recNum: number
+                  first_name: string
+                  last_name: string

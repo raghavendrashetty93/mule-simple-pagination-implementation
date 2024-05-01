@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<sub-flow name="get-paginated-data-subflow" doc:id="13a06063-4bdf-4273-b0bb-490beebf9c4f" >
+		<logger level="INFO" doc:name="Log Entry" doc:id="ff52cfeb-162f-4e64-852b-8e8c65ecd796" message="Log Entry" />
+		<flow-ref doc:name="read-data-subflow" doc:id="6522409f-b8e6-4f3f-80ad-f18e15098a19" name="read-data-subflow" target="customerData" />
+		<ee:transform doc:name="Prepare Paginated Response" doc:id="0f561245-fad6-4a6b-b205-83cb222f1faf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var offset=attributes.queryParams.offset as Number default 0
+var limit=attributes.queryParams.limit as Number default 0
+---
+{
+	nextOffset: offset+limit,
+	morePages: !isEmpty(vars.customerData[?($.recNum==offset+limit)]),
+	results: vars.customerData[?($.recNum>=offset and $.recNum<(offset+limit))]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Exit" doc:id="ec768670-f492-4ef8-8310-b683a50011b8" message="Log Exit" />
+	</sub-flow>
+<sub-flow name="read-data-subflow" doc:id="daae624c-b9b0-408d-9d46-b8137338346d" >
+		<ee:transform doc:name="Extract Data" doc:id="bc83071e-6dd2-4aca-ac5b-4321f377c6e1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var data=readUrl('classpath://us-500.csv',"application/csv") map ({recNum: $$+1} ++ $)
+---
+data]]></ee:set-payload>
+			</ee:message>
+			<ee:variables />
+		</ee:transform>
+	</sub-flow>
+
+</mule>
