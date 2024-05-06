@@ -1,18 +1,57 @@
 # mule-simple-pagination-implementation
 
 ## About Project
-Implements simple pagination
+Implements simple pagination, which single backend system. In this project a database of 500 employee records in a CSV file has been used as datasource.
 
 ## About Pagination 
-A technique to retrieve data in sets of fixed number from a desired position instead of getting all the data from source
+Pagination is a method used to divide digital content into discrete pages, thus making it more manageable and easier to navigate.
+A technique to retrieve data in sets of fixed number from a desired position instead of getting all the data from backend system.
 
 ## Setting Up Prerequisites
-
 Create a RAML definition.
+```
+#%RAML 1.0
+title: simple-pagination
+mediaType:
+  - application/json
+version: 1.0.0
+protocols:
+  - HTTP
+
+/products:
+  get:
+    queryParameters:
+      offset:
+        type: number
+        example: 1
+        format: int
+      limit:
+        type: number
+        example: 10
+        format: int
+    responses:
+      200:
+        body:
+          type: object
+          properties:
+            nextOffset: integer
+            morePages: boolean
+            results:
+              type: array
+              items:
+                properties:
+                  recNum: number
+                  first_name: string
+                  last_name: string
+```
+
+## Setting Up Mulesoft Application
+Implement the flow which calculates pagination variables.
+
 
 ## Running the application
 
-- Navigate to http://localhost:8081/console/
+- Run the project as Mule App and Navigate to http://localhost:8081/console/
 
 - Click on /products GET endpoint, provide value for offset, limit and send the request.
 ![pagi-1](https://github.com/raghavendrashetty93/mule-simple-pagination-implementation/assets/77000179/36172508-1731-49c5-9e3a-ed8045158182)
@@ -21,6 +60,3 @@ Create a RAML definition.
 ![pagi-2](https://github.com/raghavendrashetty93/mule-simple-pagination-implementation/assets/77000179/a83ec979-4ee2-437b-af80-e1a56738b18e)
 
 
-## Setting Up Mulesoft Application
-
-Implement the flow which calculates pagination variables
