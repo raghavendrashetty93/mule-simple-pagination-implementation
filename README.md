@@ -1,14 +1,16 @@
 # mule-simple-pagination-implementation
+Simple pagination describes the technique and support of systems of record to provide paginated results without too much additional logic or complex implementation
 
 ## About Project
-Implements simple pagination, which single backend system. In this project a database of 500 employee records in a CSV file has been used as datasource.
+Based on inputs provided in queryParameters from API consumer, gets paginated payload from backend system.
+For this project a database of 500 employee records in a CSV file has been used as datasource.
 
 ## About Pagination 
 Pagination is a method used to divide digital content into discrete pages, thus making it more manageable and easier to navigate.
 A technique to retrieve data in sets of fixed number from a desired position instead of getting all the data from backend system.
 
 ## Setting Up Prerequisites
-Create a RAML definition.
+Create a RAML definition using below snippet.
 ```
 #%RAML 1.0
 title: simple-pagination
@@ -47,7 +49,6 @@ protocols:
 
 ## Setting Up Mulesoft Application
 Implement the flow which calculates pagination variables.
-
 
 ## Running the application
 
